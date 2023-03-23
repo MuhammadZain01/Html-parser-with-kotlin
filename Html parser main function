@@ -1,0 +1,44 @@
+class solution:
+    def main(input_string):
+        tags = []
+        current_tag = None
+        current_attr = None
+        in_tag = False
+        in_attr = False
+        tag_attrs = {}
+        for i in range(len(input_string)):
+            char = input_string[i]
+            if char == '<':
+                in_tag = True
+                current_tag = ''
+                tag_attrs = {}
+            elif char == '>':
+                in_tag = False
+                tags.append((current_tag, tag_attrs))
+                current_tag = None
+                current_attr = None
+            elif in_tag:
+                if char == ' ':
+                    in_attr = False
+                    current_attr = None
+                elif char == '=' and current_attr is not None:
+                    in_attr = True
+                    tag_attrs[current_attr] = ''
+                elif in_attr:
+                    if char == '"' or char == "'":
+                        continue
+                    elif char == ' ':
+                        in_attr = False
+                        current_attr = None
+                    elif char == '>':
+                        in_tag = False
+                        tags.append((current_tag, tag_attrs))
+                        current_tag = None
+                        current_attr = None
+                    else:
+                        tag_attrs[current_attr] += char
+                else:
+                    current_attr = None
+                    current_tag += char
+        
+        return tags
